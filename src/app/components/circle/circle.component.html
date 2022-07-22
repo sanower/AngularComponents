@@ -1,0 +1,7 @@
+<figure class="chart-svg animate">
+  <svg role="img" xmlns="http://www.w3.org/2000/svg">
+    <circle [attr.fill]="centerColor" [attr.r]="radius" [attr.stroke-width]="strokeWidth" [attr.stroke]="strokeColorBG"  class="circle-background"/>
+    <circle [attr.fill]="'none'" [attr.r]="radiusFG" [attr.stroke-width]="strokeWidthFG" [attr.stroke]="strokeColorFG" [attr.stroke-dasharray]="strokeDashArray" [attr.stroke-dashoffset]="cirFG" class="circle-foreground"/>
+    <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" [attr.font-size]="fontSize">{{animatedPercentage}}%</text>
+  </svg>
+</figure>
