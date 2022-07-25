@@ -1,0 +1,18 @@
+.item {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  overflow: hidden;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  border-radius: 5px;
+}
+.tree {
+  position: relative;
+}
+.treeLink {
+  stroke: silver;
+  fill: transparent;
+}
