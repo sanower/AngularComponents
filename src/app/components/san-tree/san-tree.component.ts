@@ -1,66 +1,44 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, EventEmitter} from '@angular/core';
 import {
-  ECOTree,
   ECONode
 } from './econode';
+import {EcoTreeService} from "./eco-tree-service";
 
 @Component({
   selector: 'san-tree',
   templateUrl: 'san-tree.component.html',
   styleUrls: ['san-tree.component.scss'],
+  providers: [EcoTreeService]
 })
 export class SanTreeComponent implements OnChanges{
-  public treeData = new ECOTree();
+  public updated:boolean = false;
+  public databaseNodes: any = [];
   @Input() template: TemplateRef<any> | null = null;
   //@Input() data: any;
-  @Input() set data(value:any) {
-    //this.tree = new ECOTree();
-    //this.addNodes(this.tree, value);
-    //console.log(value);
-    //this.tree.UpdateTree();
+  @Input() data ={};
+  @Output() emitNodeClick = new EventEmitter();
+
+  constructor(public ECOTree: EcoTreeService) {
   }
-/*  update() {
-    this.tree.UpdateTree();
-  }*/
   get config() {
     return this.tree.config;
   }
  /* get nodes() {
     return this.tree.nDatabaseNodes;
   }*/
- public tree: ECOTree = new ECOTree();
+  public tree = new EcoTreeService();
+ //public tree: ECOTree = new ECOTree();
 
  ngOnChanges(changes: SimpleChanges) {
    if(changes['data']){
-     console.log(this.tree);
-     this.tree = new ECOTree();
+     this.tree = new EcoTreeService();
      this.addNodes(this.tree, changes['data'].currentValue);
      this.tree.UpdateTree();
-     //this.addNodes(this.treeData, changes['data'].currentValue);
-     //this.treeData.UpdateTree();
+     this.updated = true;
    }
  }
 
-  public getChildren(node: ECONode, nodes: ECONode[] = []) {
-    const children = node.nodeChildren;
-    if (children && children.length) {
-      nodes = [...nodes, ...children];
-      children.forEach((x) => {
-        nodes = this.getChildren(x, nodes);
-      });
-    }
-    return nodes;
-  }
-  getParent(node: ECONode, nodes: ECONode[] = []) {
-    if (node.nodeParent) {
-      nodes = [...nodes, node.nodeParent];
-      nodes = this.getParent(node.nodeParent, nodes);
-    }
-    return nodes;
-  }
-
-
-  private addNodes(tree: ECOTree, node: any, parent: any = null) {
+  private addNodes(tree: EcoTreeService, node: any, parent: any = null) {
     parent = parent || {
       id: -1,
       width: null,
@@ -93,4 +71,10 @@ export class SanTreeComponent implements OnChanges{
       });
     }
   }
+
+  public nodeClick(arg: {child: number, value: string}){
+   this.emitNodeClick.emit(arg);
+  }
+
+
 }

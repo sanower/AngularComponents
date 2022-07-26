@@ -1,9 +1,9 @@
-<div class="tree" *ngIf="tree.width && tree.height">
+<div class="tree" *ngIf="updated">
   <div class="wrapper">
     <svg class="treeLink"
       [style.width]="tree.width + 'px'"
       [style.height]="tree.height + 'px'" >
-      <ng-container *ngFor="let node of tree.nDatabaseNodes">
+      <ng-container *ngFor="let node of tree.nDatabaseNodes; let index2 = index;">
      <path
           *ngFor="let path of node._drawChildrenLinks(tree); let i = index"
           [attr.stroke]="node.nodeChildren[i].isSelected ? node.linkColor || null : null "
@@ -32,7 +32,7 @@
   </div>
 </div>
 <ng-template #defaultTemplate let-node>
-  <div class="item" [ngStyle]="{ 'background-color': node.bc, color: node.c }">
-    {{ node.id }}
+  <div class="item" [ngStyle]="{ 'background-color': node.bc, 'color': node.c, 'cursor': 'pointer' }" (click)="nodeClick({child: node.nodeChildren.length, value: node.data.text})">
+    {{ node.data.text }}
   </div>
 </ng-template>

@@ -13,54 +13,30 @@ export class AppComponent {
   nodeSelected: ECONode | null = null;
 
   data: IECONode = {
-    data: { id: 1 },
-    linkColor: 'red',
-    background: 'cyan',
+    width: 150,
+    data: {text: 'CTN' },
+    linkColor: 'blue',
+    background: 'red',
     color: 'white',
     selected: true,
     children: [
       {
-        data: { id: 2 },
-        linkColor: 'pink',
-        background: 'pink',
-        color: 'white',
-        selected: true,
+        data: {text: "CTN" },
         children: [
-          { data: { id: 5 }, selected: true, background: 'pink' },
-          {
-            data: { id: 6 },
-            selected: true
-          },
+          { data: {text: "Anono" }},
+          {data: {text: "abc" }},
         ],
       },
-      { data: { id: 3 }, selected: true, background: 'silver' },
+      { data: {text: "Address" }},
       {
-        data: { id: 4 },
-        linkColor: 'orange',
-        background: 'orange',
-        color: 'white',
-        selected: true,
-        children: [
-        ],
+        data: {text: "RelationShip1" },
+        children: [],
       },
     ],
   };
 
-  /**
-  selectSlibingNodes(treeView: SanTreeComponent, node: ECONode) {
-    if (node == this.nodeSelected) {
-      this.nodeSelected = null;
-      treeView.nodes.forEach((x:any) => {
-        x.isSelected = false;
-      });
-    } else {
-      this.nodeSelected = node;
-      const nodes = treeView.getSlibingNodes(node).map((x) => x.id);
-      treeView.nodes.forEach((x:any) => {
-        x.isSelected = x.id == node.id || nodes.indexOf(x.id) >= 0;
-      });
-    }
-  }
-  */
 
+  public updateNode(data: {child:number, value: string}): void{
+    console.log(data);
+  }
 }

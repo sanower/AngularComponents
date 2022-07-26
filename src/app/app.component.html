@@ -1,2 +1,2 @@
 <san-circle></san-circle>
-<san-tree #treeView [data]="data"></san-tree>
+<san-tree [data]="data" (emitNodeClick)="updateNode($event)"></san-tree>
