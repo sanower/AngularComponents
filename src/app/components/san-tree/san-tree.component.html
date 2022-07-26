@@ -4,7 +4,7 @@
       [style.width]="tree.width + 'px'"
       [style.height]="tree.height + 'px'" >
       <ng-container *ngFor="let node of tree.nDatabaseNodes">
-        <path
+     <path
           *ngFor="let path of node._drawChildrenLinks(tree); let i = index"
           [attr.stroke]="node.nodeChildren[i].isSelected ? node.linkColor || null : null "
           [attr.d]="!node._isAncestorCollapsed() ? path : null"

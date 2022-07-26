@@ -15,10 +15,7 @@ export interface IECONode {
 }
 
 export enum Orientation {
-  RO_TOP,
-  RO_BOTTOM,
-  RO_RIGHT,
-  RO_LEFT,
+  RO_LEFT
 }
 export enum Aligment {
   NJ_TOP,
@@ -35,9 +32,7 @@ export enum Colorize {
 }
 //Search method: Title, metadata or both
 export enum Search {
-  SM_DSC,
-  SM_META,
-  SM_BOTH,
+  SM_DSC
 }
 //Selection mode: single, multiple, no selection
 export enum Select {
@@ -197,21 +192,6 @@ export class ECONode {
     let node1 = null;
 
     switch (tree.config.iRootOrientation) {
-      case Orientation.RO_TOP:
-        xa = this.XPosition + this.w / 2;
-        ya = this.YPosition + this.h;
-        break;
-
-      case Orientation.RO_BOTTOM:
-        xa = this.XPosition + this.w / 2;
-        ya = this.YPosition;
-        break;
-
-      case Orientation.RO_RIGHT:
-        xa = this.XPosition;
-        ya = this.YPosition + this.h / 2;
-        break;
-
       case Orientation.RO_LEFT:
         xa = this.XPosition + this.w;
         ya = this.YPosition + this.h / 2;
@@ -224,56 +204,6 @@ export class ECONode {
       node1 = nodesSorted[k];
 
       switch (tree.config.iRootOrientation) {
-        case Orientation.RO_TOP:
-          xd = xc = node1.XPosition + node1.w / 2;
-          yd = node1.YPosition;
-          xb = xa;
-          switch (tree.config.iNodeJustification) {
-            case Aligment.NJ_TOP:
-              yb = yc = yd - tree.config.iLevelSeparation / 2;
-              break;
-            case Aligment.NJ_BOTTOM:
-              yb = yc = ya + tree.config.iLevelSeparation / 2;
-              break;
-            case Aligment.NJ_CENTER:
-              yb = yc = ya + (yd - ya) / 2;
-              break;
-          }
-          break;
-
-        case Orientation.RO_BOTTOM:
-          xd = xc = node1.XPosition + node1.w / 2;
-          yd = node1.YPosition + node1.h;
-          xb = xa;
-          switch (tree.config.iNodeJustification) {
-            case Aligment.NJ_TOP:
-              yb = yc = yd + tree.config.iLevelSeparation / 2;
-              break;
-            case Aligment.NJ_BOTTOM:
-              yb = yc = ya - tree.config.iLevelSeparation / 2;
-              break;
-            case Aligment.NJ_CENTER:
-              yb = yc = yd + (ya - yd) / 2;
-              break;
-          }
-          break;
-
-        case Orientation.RO_RIGHT:
-          xd = node1.XPosition + node1.w;
-          yd = yc = node1.YPosition + node1.h / 2;
-          yb = ya;
-          switch (tree.config.iNodeJustification) {
-            case Aligment.NJ_TOP:
-              xb = xc = xd + tree.config.iLevelSeparation / 2;
-              break;
-            case Aligment.NJ_BOTTOM:
-              xb = xc = xa - tree.config.iLevelSeparation / 2;
-              break;
-            case Aligment.NJ_CENTER:
-              xb = xc = xd + (xa - xd) / 2;
-              break;
-          }
-          break;
 
         case Orientation.RO_LEFT:
           xd = node1.XPosition;
@@ -294,26 +224,6 @@ export class ECONode {
       }
 
       switch (tree.config.linkType) {
-        case 'M':
-          s.push(
-            'M' +
-            xa +
-            ' ' +
-            ya +
-            ' L' +
-            xb +
-            ' ' +
-            yb +
-            ' L' +
-            xc +
-            ' ' +
-            yc +
-            ' L' +
-            xd +
-            ' ' +
-            yd
-          );
-          break;
 
         case 'B':
           s.push(
@@ -335,15 +245,9 @@ export class ECONode {
             yd
           );
           break;
-        case 'L':
-          if (tree.config.iRootOrientation == Orientation.RO_BOTTOM) {
-            s.push('M' + xa + ' ' + ya + ' L' + xd + ' ' + yd);
-          } else {
-            s.push('M' + xa + ' ' + ya + ' L' + xd + ' ' + yd);
-          }
-          break;
       }
     }
+    console.log('Return S', s);
     return s;
   }
 }
@@ -386,7 +290,6 @@ export class ECOTree {
       nodeBorderColor: 'white',
       nodeSelColor: '#FFFFCC',
       useTarget: true,
-      searchMode: Search.SM_DSC,
       selectMode: Select.SL_MULTIPLE,
       defaultNodeWidth: 80,
       defaultNodeHeight: 40,
@@ -527,13 +430,6 @@ export class ECOTree {
       let flag = false;
 
       switch (tree.config.iRootOrientation) {
-        case Orientation.RO_TOP:
-        case Orientation.RO_BOTTOM:
-          maxsizeTmp = tree.maxLevelHeight[level];
-          nodesizeTmp = node.h;
-          break;
-
-        case Orientation.RO_RIGHT:
         case Orientation.RO_LEFT:
           maxsizeTmp = tree.maxLevelWidth[level];
           flag = true;
@@ -562,13 +458,7 @@ export class ECOTree {
         node.YPosition = swapTmp;
       }
       switch (tree.config.iRootOrientation) {
-        case Orientation.RO_BOTTOM:
-          node.YPosition = -node.YPosition - nodesizeTmp;
-          break;
 
-        case Orientation.RO_RIGHT:
-          node.XPosition = -node.XPosition - nodesizeTmp;
-          break;
       }
       if (node._getChildrenCount() != 0){
         this._secondWalk(
@@ -594,16 +484,10 @@ export class ECOTree {
     this._firstWalk(this, this.root, 0);
 
     switch (this.config.iRootOrientation) {
-      case Orientation.RO_TOP:
       case Orientation.RO_LEFT:
         this.rootXOffset = this.config.topXAdjustment + this.root.XPosition;
         this.rootYOffset = this.config.topYAdjustment + this.root.YPosition;
         break;
-
-      case Orientation.RO_BOTTOM:
-      case Orientation.RO_RIGHT:
-        this.rootXOffset = this.config.topXAdjustment + this.root.XPosition;
-        this.rootYOffset = this.config.topYAdjustment + this.root.YPosition;
     }
 
     this._secondWalk(this, this.root, 0, 0, 0);
@@ -628,11 +512,6 @@ export class ECOTree {
 
   _getNodeSize(node: any) {
     switch (this.config.iRootOrientation) {
-      case Orientation.RO_TOP:
-      case Orientation.RO_BOTTOM:
-        return node.w;
-
-      case Orientation.RO_RIGHT:
       case Orientation.RO_LEFT:
         return node.h;
     }
@@ -688,27 +567,9 @@ export class ECOTree {
   // ECOTree API begins here...
 
   UpdateTree() {
-    console.log(Orientation);
     this._positionTree();
-    this.width =
-      this.config.iRootOrientation == Orientation.RO_RIGHT
-        ? Math.max(...this.nDatabaseNodes.map((x: any) => -x.XPosition + x.w))
-        : Math.max(...this.nDatabaseNodes.map((x: any) => x.XPosition + x.w));
-    this.height =
-      this.config.iRootOrientation == Orientation.RO_BOTTOM
-        ? Math.max(...this.nDatabaseNodes.map((x: any) => -x.YPosition + x.h))
-        : Math.max(...this.nDatabaseNodes.map((x: any) => x.YPosition + x.h));
-
-    if (this.config.iRootOrientation == Orientation.RO_BOTTOM) {
-      this.nDatabaseNodes.forEach((x: any) => {
-        x.YPosition = x.YPosition + this.height;
-      });
-    }
-    if (this.config.iRootOrientation == Orientation.RO_RIGHT) {
-      this.nDatabaseNodes.forEach((x: any) => {
-        x.XPosition = x.XPosition + this.width;
-      });
-    }
+    this.width = Math.max(...this.nDatabaseNodes.map((x: any) => x.XPosition + x.w));
+    this.height = Math.max(...this.nDatabaseNodes.map((x: any) => x.YPosition + x.h));
   }
 
   add(id: any, pid: any, dsc: any, w: any, h: any, c: any, bc: any, lc: any, meta: any, selected = false) {
@@ -742,117 +603,4 @@ export class ECOTree {
     pnode.nodeChildren[h] = node;
   }
 
-  searchNodes(str: any) {
-    let node = null;
-    const m = this.config.searchMode;
-    const sm = this.config.selectMode == Select.SL_SINGLE;
-
-    if (typeof str == 'undefined') return;
-    if (str == '') return;
-
-    let found = false;
-    let n = sm ? this.iLastSearch : 0;
-    if (n == this.nDatabaseNodes.length) n = this.iLastSearch = 0;
-
-    str = str.toLocaleUpperCase();
-
-    for (; n < this.nDatabaseNodes.length; n++) {
-      node = this.nDatabaseNodes[n];
-      if (
-        node.dsc.toLocaleUpperCase().indexOf(str) != -1 &&
-        (m == Search.SM_DSC || m == Search.SM_BOTH)
-      ) {
-        node._setAncestorsExpanded();
-        this._selectNodeInt(node.dbIndex, false);
-        found = true;
-      }
-      if (
-        node.meta.toLocaleUpperCase().indexOf(str) != -1 &&
-        (m == Search.SM_META || m == Search.SM_BOTH)
-      ) {
-        node._setAncestorsExpanded();
-        this._selectNodeInt(node.dbIndex, false);
-        found = true;
-      }
-      if (sm && found) {
-        this.iLastSearch = n + 1;
-        break;
-      }
-    }
-    this.UpdateTree();
-  }
-
-  selectAll() {
-    if (this.config.selectMode != Select.SL_MULTIPLE) return;
-    this._selectAllInt(true);
-  }
-
-  unselectAll() {
-    this._selectAllInt(false);
-  }
-
-  collapseAll() {
-    this._collapseAllInt(true);
-  }
-
-  expandAll() {
-    this._collapseAllInt(false);
-  }
-
-  collapseNode(nodeid: any, upd: any) {
-    const dbindex = this.mapIDs[nodeid];
-    this.nDatabaseNodes[dbindex].isCollapsed =
-      !this.nDatabaseNodes[dbindex].isCollapsed;
-    if (upd) this.UpdateTree();
-  }
-
-  selectNode(nodeid: any, upd: any) {
-    this._selectNodeInt(this.mapIDs[nodeid], true);
-    if (upd) this.UpdateTree();
-  }
-
-  setNodeTitle(nodeid: any, title: any, upd: any) {
-    const dbindex = this.mapIDs[nodeid];
-    this.nDatabaseNodes[dbindex].dsc = title;
-    if (upd) this.UpdateTree();
-  }
-
-  setNodeMetadata(nodeid: any, meta: any, upd: any) {
-    const dbindex = this.mapIDs[nodeid];
-    this.nDatabaseNodes[dbindex].meta = meta;
-    if (upd) this.UpdateTree();
-  }
-
-  /*
-  setNodeTarget(nodeid, target, upd) {
-    const dbindex = this.mapIDs[nodeid];
-    this.nDatabaseNodes[dbindex].target = target;
-    if (upd) this.UpdateTree();
-  }
-*/
-  setNodeColors(nodeid: any, color: any, border: any, upd: any) {
-    const dbindex = this.mapIDs[nodeid];
-    if (color) this.nDatabaseNodes[dbindex].c = color;
-    if (border) this.nDatabaseNodes[dbindex].bc = border;
-    if (upd) this.UpdateTree();
-  }
-
-  getSelectedNodes() {
-    let node = null;
-    const selection = [];
-    let selnode = null;
-
-    for (let n = 0; n < this.nDatabaseNodes.length; n++) {
-      node = this.nDatabaseNodes[n];
-      if (node.isSelected) {
-        selnode = {
-          id: node.id,
-          dsc: node.dsc,
-          meta: node.meta,
-        };
-        selection[selection.length] = selnode;
-      }
-    }
-    return selection;
-  }
 }

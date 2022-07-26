@@ -32,6 +32,7 @@ export class SanTreeComponent implements OnChanges{
 
  ngOnChanges(changes: SimpleChanges) {
    if(changes['data']){
+     console.log(this.tree);
      this.tree = new ECOTree();
      this.addNodes(this.tree, changes['data'].currentValue);
      this.tree.UpdateTree();
@@ -58,9 +59,6 @@ export class SanTreeComponent implements OnChanges{
     return nodes;
   }
 
-  getSlibingNodes(node: ECONode) {
-    return [...this.getParent(node), ...this.getChildren(node)];
-  }
 
   private addNodes(tree: ECOTree, node: any, parent: any = null) {
     parent = parent || {
