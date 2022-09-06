@@ -116,30 +116,41 @@ export class EcoTreeService{
 
   _apportion(tree: any, node: any, level: any) {
     let firstChild = node._getFirstChild();
-    let firstChildLeftNeighbor = firstChild.leftNeighbor;
+    let firstChildLeftNeighbor = firstChild.leftNeighbor; //&& firstChildLeftNeighbor != null
+    let firstChildRightNeighbor = firstChild.rightNeighbor;
     let j = 1;
     for (
       let k = tree.config.iMaxDepth - level;
-      firstChild != null && firstChildLeftNeighbor != null && j <= k;
+      firstChild != null && j <= k;
 
     ) {
       let modifierSumRight = 0;
       let modifierSumLeft = 0;
       let rightAncestor = firstChild;
       let leftAncestor = firstChildLeftNeighbor;
-      for (let l = 0; l < j; l++) {
-        rightAncestor = rightAncestor.nodeParent;
-        leftAncestor = leftAncestor.nodeParent;
-        modifierSumRight += rightAncestor.modifier;
-        modifierSumLeft += leftAncestor.modifier;
+      let totalGap;
+      if(leftAncestor !==undefined){
+        for (let l = 0; l < j; l++) {
+          rightAncestor = rightAncestor.nodeParent;
+          leftAncestor = leftAncestor.nodeParent;
+          modifierSumRight += rightAncestor.modifier;
+          modifierSumLeft += leftAncestor.modifier;
+        }
+        totalGap = firstChildLeftNeighbor.prelim +modifierSumLeft + tree._getNodeSize(firstChildLeftNeighbor) +tree.config.iSubtreeSeparation - (firstChild.prelim + modifierSumRight);
+      }
+      else {
+        for (let l = 0; l < j; l++) {
+          rightAncestor = rightAncestor.nodeParent;
+          modifierSumRight += rightAncestor.modifier;
+        }
+        totalGap = tree._getNodeSize(firstChildRightNeighbor) +tree.config.iSubtreeSeparation - (firstChild.prelim + modifierSumRight);
+
+        node.prelim += totalGap;
+        node.modifier += totalGap;
       }
 
-      let totalGap =
-        firstChildLeftNeighbor.prelim +
-        modifierSumLeft +
-        tree._getNodeSize(firstChildLeftNeighbor) +
-        tree.config.iSubtreeSeparation -
-        (firstChild.prelim + modifierSumRight);
+
+
       if (totalGap > 0) {
         let subtreeAux = node;
         let numSubtrees = 0;
