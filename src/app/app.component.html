@@ -1,2 +1,6 @@
 <san-circle></san-circle>
-<san-tree [data]="data" (emitNodeClick)="updateNode($event)"></san-tree>
+<san-tree
+  [data]="data"
+  [versionCh]="version"
+  (emitNodeClick)="updateNode($event)"
+></san-tree>

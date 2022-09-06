@@ -10,33 +10,39 @@ import {EcoTreeService} from "./eco-tree-service";
   styleUrls: ['san-tree.component.scss'],
   providers: [EcoTreeService]
 })
-export class SanTreeComponent implements OnChanges{
-  public updated:boolean = false;
+export class SanTreeComponent implements OnChanges {
+  public updated: boolean = false;
   public databaseNodes: any = [];
+  @Input() versionCh: number = 0;
   @Input() template: TemplateRef<any> | null = null;
   //@Input() data: any;
-  @Input() data ={};
+  @Input() data = {};
   @Output() emitNodeClick = new EventEmitter();
 
   constructor(public ECOTree: EcoTreeService) {
   }
+
   get config() {
     return this.tree.config;
   }
- /* get nodes() {
-    return this.tree.nDatabaseNodes;
-  }*/
-  public tree = new EcoTreeService();
- //public tree: ECOTree = new ECOTree();
 
- ngOnChanges(changes: SimpleChanges) {
-   if(changes['data']){
-     this.tree = new EcoTreeService();
-     this.addNodes(this.tree, changes['data'].currentValue);
-     this.tree.UpdateTree();
-     this.updated = true;
-   }
- }
+  public tree = new EcoTreeService();
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['data']) {
+      this.tree = new EcoTreeService();
+      this.addNodes(this.tree, changes['data'].currentValue);
+      this.tree.UpdateTree();
+      this.updated = true;
+    }
+    if (changes['versionCh']) {
+      if (this.versionCh > 0) {
+        this.tree = new EcoTreeService();
+        this.addNodes(this.tree, this.data);
+        this.tree.UpdateTree();
+      }
+    }
+  }
 
   private addNodes(tree: EcoTreeService, node: any, parent: any = null) {
     parent = parent || {
@@ -72,8 +78,8 @@ export class SanTreeComponent implements OnChanges{
     }
   }
 
-  public nodeClick(arg: {child: number, value: string}){
-   this.emitNodeClick.emit(arg);
+  public nodeClick(arg: { child: number, value: string }) {
+    this.emitNodeClick.emit(arg);
   }
 
 

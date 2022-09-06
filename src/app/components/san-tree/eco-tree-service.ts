@@ -30,8 +30,8 @@ export class EcoTreeService{
     this.config = {
       iMaxDepth: 100,
       iLevelSeparation: 40,
-      iSiblingSeparation: 40,
-      iSubtreeSeparation: 80,
+      iSiblingSeparation: 20,
+      iSubtreeSeparation: 40,
       iRootOrientation: Orientation.RO_LEFT,
       iNodeJustification: Aligment.NJ_TOP,
       topXAdjustment: 0,
